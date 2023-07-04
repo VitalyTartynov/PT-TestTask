@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<h4>SPARQL:</h4>
+{% if data.result %}
+<h6>{{ data.query }}</h6>
+<h6>Total: {{ data.result | length }}</h6>
+<table class="table table-bordered table-striped table-sm">
+  <thead>
+    <tr>
+      {% for name in data.columnnames %}
+      <th scope="col">{{ name.replace('_', ' ') | title }} </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+  {% for item in data.result %}
+  <tr>
+    {% for name in data.columnnames %}
+    <td>{{ item[name].value }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if data.errors %}
+<h6>Ooops, some errors:</h6>
+{{ data.errors }}
+{% endif %}
+{% endblock %}

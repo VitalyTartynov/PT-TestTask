@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if data.title %}
+    <title>{{ data.title }}</title>
+    {% else %}
+    <title>Тестовое задание PT</title>
+    {% endif %}
+    <link href={{ url_for('static', filename="bootstrap/bootstrap.min.css") }} rel="stylesheet" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mx-4 nav">
+        {% for navitem in data.nav %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ navitem.url }}">{{ navitem.label }}</a>
+        </li>
+        {% endfor %}
+    </div>
+    <div class="container mx-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src={{ url_for('static', filename="bootstrap/bootstrap.bundle.min.js") }} crossorigin="anonymous"></script>
+</body>
+</html>

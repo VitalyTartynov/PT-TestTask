@@ -1,0 +1,8 @@
+POST http://127.0.0.1:5000/rawsparql
+
+SELECT ?subject ?predicate ?object WHERE {?subject ?predicate ?object} LIMIT 1000
+
+###
+POST http://127.0.0.1:5000/rawsparql
+
+SELECT ?subject ?predicate ?object WHERE {?subject ?predicate ?object} LIMIT 1O00

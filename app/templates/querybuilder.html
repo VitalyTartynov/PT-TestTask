@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<form action="/querybuilder" method="post">
+    <div class="form-group">
+        <label for="requestinput">Raw SPARQL request</label>
+        <input type="text" class="form-control" id="requestinput" placeholder="SPARQL" name="query" value="{{ data.query }}" required>
+        <small>Only simple requests supported</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Execute</button>
+</form>
+
+{% if data.result %}
+<h6>Total: {{ data.result | length }}</h6>
+<table class="table table-bordered table-striped table-sm">
+  <tbody>
+  {% for item in data.result %}
+  <tr>
+    <td>{{ item }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if data.errors %}
+<h6>Ooops, some errors:</h6>
+{{ data.errors }}
+{% endif %}
+{% endblock %}
