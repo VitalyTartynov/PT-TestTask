@@ -12,6 +12,10 @@ nav = [{'label': 'Home', 'url': '/index'},
 @app.route('/')
 @app.route('/index')
 def index():
+    """
+    Main page without work with database.
+    :return:
+    """
     data = {'nav': nav,
             'content': 'Navigate to one of the hardcoded requests or simple requests builder'}
     return render_template('index.html', data=data)
@@ -20,6 +24,11 @@ def index():
 @app.route('/query', defaults={'id': 1})
 @app.route('/query/<int:id>')
 def query(id: int):
+    """
+    Query pages for concrete requests from task.
+    :param id: Request id.
+    :return: Page with data from database.
+    """
     data = {'nav': nav}
     try:
         server = sparql.SPARQLServer(app.dbendpoint)
@@ -38,6 +47,10 @@ def query(id: int):
 
 @app.route('/querybuilder', methods = ['GET', 'POST'])
 def querybuilder():
+    """
+    Additional page for executing input queries.
+    :return: Page for input query and show results.
+    """
     data = {'nav': nav,
             'query': configuration.requests[0]['value']}
     if request.method == 'POST':
@@ -81,6 +94,11 @@ def raw_sparql():
 
 @app.errorhandler(404)
 def not_found(error: int):
+    """
+    Not found page.
+    :param error: Error number.
+    :return: Page with description.
+    """
     data = {'nav': nav,
             'content': '404! Page not found'}
     return render_template('index.html', data=data)
