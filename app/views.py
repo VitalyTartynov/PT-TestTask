@@ -1,13 +1,18 @@
 from flask import render_template, request, abort
+from flask_restx import Resource, Namespace, fields
+from flask_restx._http import HTTPStatus
+
 from pymantic import sparql
-from app import app
+from app import app, api
 from app import configuration
 
 nav = [{'label': 'Home', 'url': '/index'},
        {'label': 'SPARQL1', 'url': '/query/1'},
        {'label': 'SPARQL2', 'url': '/query/2'},
        {'label': 'SPARQL3', 'url': '/query/3'},
-       {'label': 'Builder', 'url': '/querybuilder'}]
+       {'label': 'Builder', 'url': '/querybuilder'},
+       {'label': 'Swagger UI', 'url': '/api/v1'}]
+
 
 @app.route('/')
 @app.route('/index')
@@ -65,32 +70,31 @@ def querybuilder():
     return render_template('querybuilder.html', data=data)
 
 
-@app.post('/rawsparql')
-def raw_sparql():
-    """Query raw SPARQL requests.
-    ---
-    parameters:
-        name: body
-        in: body
-    responses:
-        200:
-            description: Request completed
-            schema:
-                type: array
-                items:
-                    type: string
-        500:
-            description: Request failed
-            schema:
-                type: string
+sparqlNsp = Namespace('api/v1')
+execCommand = sparqlNsp.model('Exec SPARQL query', {'query': fields.String(required=True, description='Raw SPARQL')})
+api.add_namespace(sparqlNsp)
+
+@sparqlNsp.route('/rawsparql')
+class RawRequests(Resource):
     """
-    try:
-        query = request.get_data(as_text=True)
-        server = sparql.SPARQLServer(configuration.dbendpoint)
-        result = server.query(query)
-        return result['results']['bindings']
-    except Exception as err:
-        return abort(500, err)
+    API for execute raw SPARQL queries
+    """
+
+    @sparqlNsp.expect(execCommand)
+    @api.response(HTTPStatus.OK.value, "Request completed")
+    @api.response(HTTPStatus.INTERNAL_SERVER_ERROR.value, "Internal server error")
+    def post(self):
+        """
+        Query raw SPARQL requests.
+        """
+        try:
+            body = request.get_json()
+            rawquery = body['query']
+            server = sparql.SPARQLServer(configuration.dbendpoint)
+            result = server.query(rawquery)
+            return result['results']['bindings']
+        except Exception as err:
+            return abort(500, err)
 
 @app.errorhandler(404)
 def not_found(error: int):

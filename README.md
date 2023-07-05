@@ -12,4 +12,5 @@
 ![alt text](images/img2.png)
 
 
-REST API наиболее просто проверить используя VSCode плагин REST Client, два тестовых запроса написаны в файле rawsparql.http
+REST API наиболее просто проверить используя VSCode плагин REST Client, два тестовых запроса написаны в файле rawsparql.http. Также подключен Swagger UI.
+![alt text](images/img3.png)
