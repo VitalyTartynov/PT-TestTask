@@ -9,7 +9,6 @@ nav = [{'label': 'Home', 'url': '/index'},
        {'label': 'SPARQL3', 'url': '/query/3'},
        {'label': 'Builder', 'url': '/querybuilder'}]
 
-# сверстать на блоках? https://jinja.palletsprojects.com/en/3.1.x/templates/#blocks
 @app.route('/')
 @app.route('/index')
 def index():
@@ -85,12 +84,3 @@ def not_found(error: int):
     data = {'nav': nav,
             'content': '404! Page not found'}
     return render_template('index.html', data=data)
-
-# TODO: а может так?
-# current_app.response_class(
-#            response=json.dumps(
-#                {'error': 'Не передан параметр number'}
-#            ),
-#            status=400,
-#            mimetype='application/json'
-#        )
